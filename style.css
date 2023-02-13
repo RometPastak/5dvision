@@ -1,0 +1,48 @@
+.hidden {
+    display: none;
+}
+
+.login {
+    width: 30%;
+    margin: 3em auto;
+    border: 1px solid black;
+    border-radius: 2em;
+    padding: 2em;
+}
+
+.login input {
+    margin: 4px;
+}
+
+.otsing, .statistika {
+    width: 30%;
+    margin: 1em auto;
+}
+
+#row:hover {
+    cursor: pointer;
+}
+
+.kasutaja-andmed {
+    width: 50%;
+    border: 1px solid black;
+    border-radius: 2em;
+    margin: 3em auto;
+    padding: 2em;
+}
+
+.kasutaja-andmed div {
+    margin: 0.5em;
+}
+
+.register {
+    width: 30%;
+    border: 1px solid black;
+    border-radius: 2em;
+    margin: 3em auto;
+    padding: 2em;
+}
+
+.register div {
+    margin: 0.5em;
+}

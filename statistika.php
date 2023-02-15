@@ -1,17 +1,6 @@
 <?php
+    require('db.php');
     session_start();
-
-    $db_user = "root";
-    $db_password = "";
-    $db_name = "5dvision";
-    $db_host = "localhost";
-
-    $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-    if($mysqli->connect_error) {
-        printf("Connect failed: %s", $mysqli->connect_error);
-        exit();
-    }
 
     if(!isset($_SESSION['logged_in'])) {
         header('Location: index.php');
@@ -51,8 +40,23 @@
                     $rongastatud_lindude_arv[$aasta] = 1;
                 }
 
-                array_push($tiivapikkused, $row['Tiiva pikkus']);
-                array_push($kaalud, $row['Mass']);
+                if($row['Tiiva pikkus'] != '') {
+                    if(isset($tiivapikkused[$aasta])) {
+                        array_push($tiivapikkused[$aasta], $row['Tiiva pikkus']);
+                    }
+                    else {
+                        $tiivapikkused[$aasta] = array($row['Tiiva pikkus']);
+                    }
+                }
+
+                if($row['Mass'] != '') {
+                    if(isset($kaalud[$aasta])) {
+                        array_push($kaalud[$aasta], $row['Mass']);
+                    }
+                    else {
+                        $kaalud[$aasta] = array($row['Mass']);
+                    }
+                }
             }
         }
     }
@@ -138,50 +142,80 @@
             </thead>
             <tbody>
                 <?php if(isset($result)): ?>
-                    <tr>
-                        <td>
-                            <?php
-                                foreach($rongastatud_lindude_arv as $aasta => $mitu) {
+                    <?php foreach($rongastatud_lindude_arv as $aasta => $mitu): ?>
+                        <tr>
+                            <td>
+                                <?php
                                     if($mitu == $suurim_aasta) {
-                                        echo "<span style='color:red; font-weight:bold;'>" . $aasta . " - " . $mitu . "</span><br />";
+                                        echo "<span style='color:red; font-weight:bold;'>" . $aasta . " - " . $mitu . "</span>";
                                     }
                                     else {
-                                        echo $aasta . " - " . $mitu . "<br />";
+                                        echo $aasta . " - " . $mitu;
                                     }
-                                }
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                                echo number_format(floatval(min($tiivapikkused)), 2);
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                                echo number_format(floatval(array_sum($tiivapikkused) / count($tiivapikkused)), 2);
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                                echo number_format(floatval(max($tiivapikkused)), 2);
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                                echo number_format(floatval(min($kaalud)), 2);
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                                echo number_format(floatval(array_sum($kaalud) / count($kaalud)), 2);
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                                echo number_format(floatval(max($kaalud)), 2);
-                            ?>
-                        </td>
-                    </tr>
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    if(isset($tiivapikkused[$aasta])) {
+                                        echo number_format(floatval(min($tiivapikkused[$aasta])), 2);
+                                    }
+                                    else {
+                                        echo "Selle aasta kohta pole andmeid kuvada!";
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    if(isset($tiivapikkused[$aasta])) {
+                                        echo number_format(floatval(array_sum($tiivapikkused[$aasta]) / count($tiivapikkused[$aasta])), 2);
+                                    }
+                                    else {
+                                        echo "Selle aasta kohta pole andmeid kuvada!";
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    if(isset($tiivapikkused[$aasta])) {
+                                        echo number_format(floatval(max($tiivapikkused[$aasta])), 2);
+                                    }
+                                    else {
+                                        echo "Selle aasta kohta pole andmeid kuvada!";
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    if(isset($kaalud[$aasta])) {
+                                        echo number_format(floatval(min($kaalud[$aasta])), 2);
+                                    }
+                                    else {
+                                        echo "Selle aasta kohta pole andmeid kuvada!";
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    if(isset($kaalud[$aasta])) {
+                                        echo number_format(floatval(array_sum($kaalud[$aasta]) / count($kaalud[$aasta])), 2);
+                                    }
+                                    else {
+                                        echo "Selle aasta kohta pole andmeid kuvada!";
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                    if(isset($kaalud[$aasta])) {
+                                        echo number_format(floatval(max($kaalud[$aasta])), 2);
+                                    }
+                                    else {
+                                        echo "Selle aasta kohta pole andmeid kuvada!";
+                                    }
+                                ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>

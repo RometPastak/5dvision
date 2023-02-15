@@ -1,23 +1,18 @@
 <?php
+    require('db.php');
     session_start();
-
-    $db_user = "root";
-    $db_password = "";
-    $db_name = "5dvision";
-    $db_host = "localhost";
-
-    $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-    if($mysqli->connect_error) {
-        printf("Connect failed: %s", $mysqli->connect_error);
-        exit();
-    }
 
     if(isset($_SESSION['logged_in'])) {
         header('Location: index.php');
     }
 
     $messages = [];
+    $kasutajatunnus = '';
+    $eesnimi = '';
+    $perenimi = '';
+    $sunniaeg = '';
+    $epost = '';
+    $telefon = '';
 
     if(isset($_POST["registreeru"])) {
         $kasutajatunnus = $_POST['kasutajatunnus'];
@@ -29,14 +24,17 @@
         $telefon = $_POST['telefon'];
 
         if(!preg_match("/^[a-zA-Z-' ]*$/", $eesnimi)) {
+            $eesnimi = "";
             array_push($messages, "Eesnimi võib sisaldada ainult tähti!");
         }
 
         if(!preg_match("/^[a-zA-Z-' ]*$/", $perenimi)) {
+            $perenimi = "";
             array_push($messages, "Perenimi võib sisaldada ainult tähti!");
         }
 
         if(!filter_var($epost, FILTER_VALIDATE_EMAIL)) {
+            $epost = "";
             array_push($messages, "E-posti aadress ei ole korrektne!");
         }
 
@@ -49,6 +47,7 @@
         }
 
         if(strlen($kasutajatunnus) < 6) {
+            $kasutajatunnus = "";
             array_push($messages, "Kasutajatunnus peab olema vähemalt 6 tähemärki pikk!");
         }
 
@@ -58,6 +57,7 @@
             $result = $mysqli->query($query);
 
             if(mysqli_num_rows($result) >= 1) {
+                $kasutajatunnus = "";
                 array_push($messages, "Sellise kasutajanimega kasutaja on juba olemas!");
             }
             else {
@@ -126,27 +126,27 @@
             ?>
             <div>
                 <label for="eesnimi">Eesnimi</label>
-                <input id="eesnimi" type="text" name="eesnimi" class="form-control" placeholder="Eesnimi" aria-describedby="basic-addon1" />
+                <input id="eesnimi" type="text" name="eesnimi" class="form-control" placeholder="Eesnimi" value="<?php echo $eesnimi; ?>" aria-describedby="basic-addon1" />
             </div>
             <div>
                 <label for="perenimi">Perenimi</label>
-                <input id="perenimi" type="text" name="perenimi" class="form-control" placeholder="Perenimi" aria-describedby="basic-addon1" />
+                <input id="perenimi" type="text" name="perenimi" class="form-control" placeholder="Perenimi" value="<?php echo $perenimi; ?>" aria-describedby="basic-addon1" />
             </div>
             <div>
                 <label for="sünniaeg">Sünniaeg</label>
-                <input id="sünniaeg" type="date" name="sünniaeg" class="form-control" placeholder="Sünniaeg" aria-describedby="basic-addon1" />
+                <input id="sünniaeg" type="date" name="sünniaeg" class="form-control" placeholder="Sünniaeg" value="<?php echo $sunniaeg; ?>" aria-describedby="basic-addon1" />
             </div>
             <div>
                 <label for="epost">E-postiaadress</label>
-                <input id="epost" type="text" name="epost" class="form-control" placeholder="E-postiaadress" aria-describedby="basic-addon1" />
+                <input id="epost" type="text" name="epost" class="form-control" placeholder="E-postiaadress" value="<?php echo $epost; ?>" aria-describedby="basic-addon1" />
             </div>
             <div>
                 <label for="telefon">Telefon</label>
-                <input id="telefon" type="text" name="telefon" class="form-control" placeholder="Telefon" aria-describedby="basic-addon1" />
+                <input id="telefon" type="text" name="telefon" class="form-control" placeholder="Telefon" value="<?php echo $telefon; ?>" aria-describedby="basic-addon1" />
             </div>
             <div>
                 <label for="kasutajatunnus">Kasutajatunnus</label>
-                <input id="kasutajatunnus" type="text" name="kasutajatunnus" class="form-control" placeholder="Kasutajatunnus" aria-describedby="basic-addon1" />
+                <input id="kasutajatunnus" type="text" name="kasutajatunnus" class="form-control" placeholder="Kasutajatunnus" value="<?php echo $kasutajatunnus; ?>" aria-describedby="basic-addon1" />
             </div>
             <div>
                 <label for="parool">Parool</label>
